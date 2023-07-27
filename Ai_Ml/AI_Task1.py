@@ -1,0 +1,27 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+
+df = pd.read_csv('homeprices.csv')
+print(df)
+
+X = df[['area']]
+Y = df['price']
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y)
+reg = linear_model.LinearRegression()
+reg.fit(X_train.values.reshape(-1, 1), Y_train)
+prediction = reg.predict(X_test.values.reshape(-1, 1))
+
+print("Mean Squared error is: ", mean_squared_error(Y_test, prediction))
+print("Coefficient: ",reg.coef_)
+print("Intercept: ", reg.intercept_)
+
+# Graph
+plt.xlabel('Area(sqr ft)')
+plt.ylabel('Price(rs)')
+plt.scatter(df[['area']], df['price'], color='red')
+plt.plot(df.area, reg.predict(df[['area']]), color='blue')
+plt.show()
